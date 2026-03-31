@@ -1,0 +1,76 @@
+{
+  "entities": {
+    "class": {
+      "title": "Class",
+      "description": "A scheduled university class.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "description": "Course name" },
+        "room": { "type": "string", "description": "Classroom location" },
+        "day": { "type": "string", "enum": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] },
+        "startTime": { "type": "string", "description": "HH:mm format" },
+        "endTime": { "type": "string", "description": "HH:mm format" },
+        "instructor": { "type": "string" },
+        "date": { "type": "string", "description": "YYYY-MM-DD for specific overrides" }
+      },
+      "required": ["name", "day", "startTime", "endTime"]
+    },
+    "event": {
+      "title": "Academic Event",
+      "description": "An assignment deadline, exam, or project milestone.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "type": { "type": "string", "enum": ["Assignment", "Exam", "Project", "Other"] },
+        "dueDate": { "type": "string", "format": "date-time", "description": "ISO 8601 timestamp" },
+        "courseId": { "type": "string", "description": "Reference to a class id" },
+        "description": { "type": "string" }
+      },
+      "required": ["title", "type", "dueDate"]
+    },
+    "user": {
+      "title": "User Profile",
+      "description": "User information and roles.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "student"] }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "quickLink": {
+      "title": "Quick Link",
+      "description": "A link to a specific site for easy access.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "url": { "type": "string", "format": "uri" },
+        "category": { "type": "string" },
+        "icon": { "type": "string", "description": "Lucide icon name" }
+      },
+      "required": ["title", "url", "category"]
+    }
+  },
+  "firestore": {
+    "/classes/{classId}": {
+      "schema": "class",
+      "description": "Collection of university classes."
+    },
+    "/events/{eventId}": {
+      "schema": "event",
+      "description": "Collection of academic events and deadlines."
+    },
+    "/users/{userId}": {
+      "schema": "user",
+      "description": "User profiles and roles."
+    },
+    "/quickLinks/{linkId}": {
+      "schema": "quickLink",
+      "description": "Collection of quick links to external sites."
+    }
+  }
+}
