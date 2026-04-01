@@ -1,5 +1,5 @@
 import { Class, AcademicEvent, QuickLink } from './types';
-import { db, collection, doc, setDoc } from './firebase';
+import { db, collection, doc, setDoc, getDocs, deleteDoc } from './firebase';
 
 const classes: Partial<Class>[] = [
   // KW 15
@@ -130,14 +130,15 @@ export async function seedData() {
   const eventCol = collection(db, 'events');
   const linkCol = collection(db, 'quickLinks');
 
+  // Add the new data with semester: 4
   for (const c of classes) {
     const id = Math.random().toString(36).substr(2, 9);
-    await setDoc(doc(classCol, id), { ...c, id });
+    await setDoc(doc(classCol, id), { ...c, id, semester: 4 });
   }
 
   for (const e of events) {
     const id = Math.random().toString(36).substr(2, 9);
-    await setDoc(doc(eventCol, id), { ...e, id, description: e.description || '' });
+    await setDoc(doc(eventCol, id), { ...e, id, description: e.description || '', semester: 4 });
   }
 
   for (const l of quickLinks) {

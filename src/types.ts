@@ -7,6 +7,7 @@ export interface Class {
   endTime: string;
   instructor: string;
   date?: string; // ISO 8601 (YYYY-MM-DD) for specific overrides
+  semester?: number;
 }
 
 export interface AcademicEvent {
@@ -16,6 +17,7 @@ export interface AcademicEvent {
   dueDate: string; // ISO 8601
   courseId?: string;
   description: string;
+  semester?: number;
 }
 
 export interface UserProfile {
