@@ -386,16 +386,24 @@ export default function App() {
   }, [events, selectedDate, selectedSemester]);
 
   const upcomingDeadlines = useMemo(() => {
-    const today = startOfDay(new Date());
-    const twoWeeksLater = addDays(today, 14);
+    const today = startOfDay(now);
+    const twoWeeksLater = endOfDay(addDays(today, 14));
+    
+    const getSafeDate = (d: any) => {
+      if (!d) return new Date(NaN);
+      if (typeof d === 'object' && d.seconds) return new Date(d.seconds * 1000);
+      if (d instanceof Date) return d;
+      return parseISO(String(d));
+    };
+
     return events
-      .filter(e => !e.semester || e.semester === selectedSemester)
       .filter(e => {
-        const dueDate = parseISO(e.dueDate);
+        const dueDate = getSafeDate(e.dueDate);
+        if (isNaN(dueDate.getTime())) return false;
         return dueDate >= today && dueDate <= twoWeeksLater;
       })
-      .sort((a, b) => parseISO(a.dueDate).getTime() - parseISO(b.dueDate).getTime());
-  }, [events, selectedSemester]);
+      .sort((a, b) => getSafeDate(a.dueDate).getTime() - getSafeDate(b.dueDate).getTime());
+  }, [events, now]);
 
   // --- Next/Current Lesson (looks across all days) ---
   const nextOrCurrentLesson = useMemo(() => {
@@ -1103,9 +1111,15 @@ export default function App() {
                   ) : (
                     <div className="space-y-3">
                       {upcomingDeadlines.map(e => {
+                        const getSafeDate = (d: any) => {
+                          if (!d) return new Date(NaN);
+                          if (typeof d === 'object' && d.seconds) return new Date(d.seconds * 1000);
+                          if (d instanceof Date) return d;
+                          return parseISO(String(d));
+                        };
                         const semesterStart = new Date(2026, 3, 1);
-                        const dueDate = parseISO(e.dueDate);
-                        const daysLeft = differenceInDays(dueDate, startOfDay(new Date()));
+                        const dueDate = getSafeDate(e.dueDate);
+                        const daysLeft = differenceInDays(dueDate, startOfDay(now));
                         const totalDuration = Math.max(1, differenceInDays(dueDate, semesterStart));
                         const percentLeft = (daysLeft / totalDuration) * 100;
 
@@ -1142,8 +1156,21 @@ export default function App() {
                             </div>
                             <h4 className="font-bold text-gray-900">{e.title}</h4>
                             <div className="flex items-center justify-between mt-2">
-                              <span className="text-xs text-gray-400">{format(parseISO(e.dueDate), 'MMM do', { locale: de })}</span>
-                              <span className="text-xs text-gray-400">{format(parseISO(e.dueDate), 'HH:mm', { locale: de })}</span>
+                              {(() => {
+                                const getSafeDate = (d: any) => {
+                                  if (!d) return new Date(NaN);
+                                  if (typeof d === 'object' && d.seconds) return new Date(d.seconds * 1000);
+                                  if (d instanceof Date) return d;
+                                  return parseISO(String(d));
+                                };
+                                const date = getSafeDate(e.dueDate);
+                                return (
+                                  <>
+                                    <span className="text-xs text-gray-400">{format(date, 'MMM do', { locale: de })}</span>
+                                    <span className="text-xs text-gray-400">{format(date, 'HH:mm', { locale: de })}</span>
+                                  </>
+                                );
+                              })()}
                             </div>
                           </Card>
                         );
