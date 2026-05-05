@@ -13,3 +13,49 @@
   --color-primary-900: #5a1616;
   --color-primary-950: #450a0a;
 }
+
+/* Custom Themes */
+.theme-dark {
+  background-color: #111827;
+  color: #f9fafb;
+}
+.theme-dark .bg-white { background-color: #1f2937; border-color: #374151; }
+.theme-dark .text-gray-900 { color: #f9fafb; }
+.theme-dark .text-gray-500 { color: #9ca3af; }
+.theme-dark .bg-gray-50 { background-color: #111827; }
+.theme-dark .border-gray-200 { border-color: #374151; }
+
+.theme-sepia {
+  background-color: #f4ecd8;
+  color: #5b4636;
+}
+.theme-sepia .bg-white { background-color: #fdf6e3; border-color: #ddd6c1; }
+.theme-sepia .text-gray-900 { color: #5b4636; }
+.theme-sepia .text-gray-500 { color: #85756a; }
+.theme-sepia .bg-gray-50 { background-color: #f4ecd8; }
+
+.theme-forest {
+  background-color: #ecf3f0;
+  color: #1a2e1a;
+}
+.theme-forest .bg-white { background-color: #ffffff; border-color: #d1dfd7; }
+.theme-forest .text-primary-600 { color: #2d5a27; }
+.theme-forest .bg-primary-600 { background-color: #2d5a27; }
+
+.theme-cyberpunk {
+  background-color: #0d0221;
+  color: #00ff41;
+}
+.theme-cyberpunk .bg-white { background-color: #1a0b2e; border-color: #ff00ff; border-width: 2px; }
+.theme-cyberpunk .text-gray-900 { color: #00ff41; text-shadow: 0 0 5px #00ff41; }
+.theme-cyberpunk .text-primary-600 { color: #ff00ff; }
+.theme-cyberpunk .bg-primary-600 { background-color: #ff00ff; }
+
+.theme-retro {
+  background-color: #2b0f5a;
+  color: #ff71ce;
+}
+.theme-retro .bg-white { background-color: #05d9e8; border-color: #fffb96; border-width: 3px; }
+.theme-retro .text-gray-900 { color: #010101; }
+.theme-retro .text-primary-600 { color: #b967ff; }
+.theme-retro .bg-primary-600 { background-color: #ff71ce; }
