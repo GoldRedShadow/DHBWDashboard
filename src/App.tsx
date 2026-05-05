@@ -69,16 +69,9 @@ import {
   Book,
   GraduationCap,
   Mail,
-  LifeBuoy,
-  Coffee,
-  Cat,
-  Bird,
-  Ticket
+  LifeBuoy
 } from 'lucide-react';
 import { cn } from './lib/utils';
-import { SlotMachine } from './components/SlotMachine';
-import { ProfilePage } from './components/ProfilePage';
-import { PRIZES } from './lib/prizes';
 
 // --- Components ---
 
@@ -229,7 +222,7 @@ export default function App() {
   const [profileLoading, setProfileLoading] = useState(false);
   const [seeding, setSeeding] = useState(false);
   const [seedSuccess, setSeedSuccess] = useState(false);
-  const [view, setView] = useState<'dashboard' | 'calendar' | 'deadlines' | 'links' | 'admin' | 'modules' | 'slot' | 'profile'>('dashboard');
+  const [view, setView] = useState<'dashboard' | 'calendar' | 'deadlines' | 'links' | 'admin' | 'modules'>('dashboard');
   const [selectedModule, setSelectedModule] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedSemester, setSelectedSemester] = useState<number>(4);
@@ -281,38 +274,15 @@ export default function App() {
 
     const userDoc = doc(db, 'users', user.uid);
     setProfileLoading(true);
-    const unsubscribe = onSnapshot(userDoc, async (snapshot) => {
+    const unsubscribe = onSnapshot(userDoc, (snapshot) => {
       if (snapshot.exists()) {
-        const data = snapshot.data() as UserProfile;
-
-        // Token Reset Logic
-        const today = new Date().toISOString().split('T')[0];
-        if (data.lastTokenRefresh !== today) {
-          const updatedProfile = {
-            ...data,
-            tokens: 5,
-            lastTokenRefresh: today
-          };
-          await updateDoc(userDoc, {
-            tokens: 5,
-            lastTokenRefresh: today
-          }).catch(err => handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}`));
-          setUserProfile(updatedProfile);
-        } else {
-          setUserProfile(data);
-        }
+        setUserProfile(snapshot.data() as UserProfile);
       } else {
         // Default to student if not exists
-        const today = new Date().toISOString().split('T')[0];
         const newProfile: UserProfile = {
           uid: user.uid,
           email: user.email || '',
-          role: user.email === 'lukas.spraul@gmail.com' ? 'admin' : 'student',
-          tokens: 5,
-          lastTokenRefresh: today,
-          inventory: [],
-          activeTheme: '',
-          activeGimmick: ''
+          role: user.email === 'lukas.spraul@gmail.com' ? 'admin' : 'student'
         };
         setDoc(userDoc, newProfile).catch(err => handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}`));
         setUserProfile(newProfile);
@@ -697,23 +667,6 @@ export default function App() {
     }
   };
 
-  const activeThemeClass = useMemo(() => {
-    if (!userProfile?.activeTheme) return '';
-    const theme = PRIZES.find(p => p.id === userProfile.activeTheme);
-    return theme?.value || '';
-  }, [userProfile]);
-
-  const activeGimmickIcon = useMemo(() => {
-    if (!userProfile?.activeGimmick) return null;
-    const gimmick = PRIZES.find(p => p.id === userProfile.activeGimmick);
-    switch (gimmick?.value) {
-      case 'Coffee': return <Coffee className="text-amber-600 animate-bounce" size={20} />;
-      case 'Cat': return <Cat className="text-orange-400 animate-pulse" size={20} />;
-      case 'Bird': return <Bird className="text-blue-400 animate-bounce" size={20} />;
-      default: return null;
-    }
-  }, [userProfile]);
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -727,7 +680,7 @@ export default function App() {
   }
 
   return (
-    <div className={cn("min-h-screen bg-gray-50 flex flex-col transition-colors duration-500", activeThemeClass)}>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
         <div className="w-full max-w-[1920px] mx-auto px-4 lg:px-8 h-16 flex items-center justify-between">
@@ -780,33 +733,13 @@ export default function App() {
             >
               Admin-Bereich
             </Button>
-            <div className="w-px h-6 bg-gray-200 mx-2" />
-            <Button
-              variant={view === 'slot' ? 'primary' : 'ghost'}
-              onClick={() => setView('slot')}
-              className="px-3 py-1.5 text-sm text-yellow-600 font-bold"
-            >
-              <Ticket size={16} />
-              Slot Maschine
-            </Button>
-            <Button
-              variant={view === 'profile' ? 'primary' : 'ghost'}
-              onClick={() => setView('profile')}
-              className="px-3 py-1.5 text-sm"
-            >
-              <UserIcon size={16} />
-              Profil
-            </Button>
           </nav>
 
           <div className="flex items-center gap-4">
             {user ? (
               <>
                 <div className="hidden sm:flex flex-col items-end">
-                  <div className="flex items-center gap-2">
-                    {activeGimmickIcon}
-                    <span className="text-sm font-medium text-gray-900">{user.displayName}</span>
-                  </div>
+                  <span className="text-sm font-medium text-gray-900">{user.displayName}</span>
                   <span className="text-xs text-gray-500 capitalize">{userProfile?.role}</span>
                 </div>
                 <Button variant="ghost" onClick={handleLogout} className="p-2">
@@ -866,9 +799,7 @@ export default function App() {
                     { id: 'deadlines', label: 'Deadlines' },
                     { id: 'modules', label: 'Module' },
                     { id: 'links', label: 'Links' },
-                    { id: 'admin', label: 'Admin-Bereich' },
-                    { id: 'slot', label: 'Slot Maschine' },
-                    { id: 'profile', label: 'Profil' }
+                    { id: 'admin', label: 'Admin-Bereich' }
                   ].map((navItem) => (
                     <Button 
                       key={navItem.id}
@@ -1923,56 +1854,6 @@ export default function App() {
                   </div>
                 )}
               </AnimatePresence>
-            </motion.div>
-          ) : view === 'slot' ? (
-            <motion.div
-              key="slot"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-            >
-              {user && userProfile ? (
-                <SlotMachine userProfile={userProfile} />
-              ) : (
-                <div className="max-w-md mx-auto mt-20 text-center space-y-6">
-                  <div className="w-20 h-20 bg-yellow-100 text-yellow-600 rounded-3xl flex items-center justify-center mx-auto">
-                    <Ticket size={40} />
-                  </div>
-                  <div className="space-y-2">
-                    <h2 className="text-2xl font-black text-gray-900">Slot Maschine</h2>
-                    <p className="text-gray-500">Bitte logge dich ein, um an der Slot Maschine zu spielen und Preise zu gewinnen!</p>
-                  </div>
-                  <Button onClick={handleLogin} className="w-full py-4 text-lg">
-                    <LogIn size={20} />
-                    Jetzt Anmelden
-                  </Button>
-                </div>
-              )}
-            </motion.div>
-          ) : view === 'profile' ? (
-            <motion.div
-              key="profile"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-            >
-              {user && userProfile ? (
-                <ProfilePage userProfile={userProfile} />
-              ) : (
-                <div className="max-w-md mx-auto mt-20 text-center space-y-6">
-                  <div className="w-20 h-20 bg-primary-100 text-primary-600 rounded-3xl flex items-center justify-center mx-auto">
-                    <UserIcon size={40} />
-                  </div>
-                  <div className="space-y-2">
-                    <h2 className="text-2xl font-black text-gray-900">Dein Profil</h2>
-                    <p className="text-gray-500">Bitte logge dich ein, um dein Profil zu sehen und deine Boni zu verwalten.</p>
-                  </div>
-                  <Button onClick={handleLogin} className="w-full py-4 text-lg">
-                    <LogIn size={20} />
-                    Jetzt Anmelden
-                  </Button>
-                </div>
-              )}
             </motion.div>
           ) : (
             <motion.div
