@@ -24,22 +24,6 @@ export interface UserProfile {
   uid: string;
   email: string;
   role: 'admin' | 'student';
-  tokens?: number;
-  lastTokenRefresh?: string; // ISO date string
-  inventory?: string[];
-  activeTheme?: string;
-  activeGimmick?: string;
-}
-
-export type Rarity = 'common' | 'rare' | 'legendary';
-
-export interface Prize {
-  id: string;
-  name: string;
-  type: 'theme' | 'gimmick';
-  rarity: Rarity;
-  description: string;
-  value?: string; // CSS class for theme, or icon name for gimmick
 }
 
 export interface QuickLink {
