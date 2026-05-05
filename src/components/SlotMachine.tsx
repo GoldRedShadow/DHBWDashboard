@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Gift, Coins, AlertCircle, Sparkles, Trophy, Ticket, Cat, Bird } from 'lucide-react';
 import { Gift, Coins, AlertCircle, Sparkles, Trophy, Ticket } from 'lucide-react';
 import { Prize, UserProfile } from '../types';
 import { PRIZES, getPrizesByRarity } from '../lib/prizes';
@@ -52,6 +53,7 @@ export const SlotMachine: React.FC<SlotMachineProps> = ({ userProfile }) => {
     setTimeout(() => setSpinningReels([false, false, true]), 2500);
     setTimeout(async () => {
       setSpinningReels([false, false, false]);
+
       
       try {
         const userDoc = doc(db, 'users', userProfile.uid);
@@ -126,6 +128,12 @@ export const SlotMachine: React.FC<SlotMachineProps> = ({ userProfile }) => {
                       className="text-white"
                     >
                       {result ? (
+                        result.rarity === 'legendary' ? (
+                          <div className="relative">
+                            <div className="absolute inset-0 bg-yellow-400/30 blur-lg rounded-full animate-pulse" />
+                            {result.value === 'Cat' ? <Cat size={48} className="text-orange-400 relative" /> : <Bird size={48} className="text-blue-400 relative" />}
+                          </div>
+                        ) : result.rarity === 'rare' ? <Sparkles size={48} className="text-blue-400" /> :
                         result.rarity === 'legendary' ? <Trophy size={48} className="text-yellow-400" /> :
                         result.rarity === 'rare' ? <Sparkles size={48} className="text-blue-400" /> :
                         <Gift size={48} className="text-primary-400" />
@@ -170,6 +178,20 @@ export const SlotMachine: React.FC<SlotMachineProps> = ({ userProfile }) => {
             animate={{ opacity: 1, y: 0 }}
             className="bg-yellow-50 border-2 border-yellow-200 p-6 rounded-2xl text-center space-y-4"
           >
+            <div className="inline-block p-3 bg-yellow-100 rounded-full relative">
+              {result.rarity === 'legendary' ? (
+                <>
+                  <div className="absolute inset-0 bg-yellow-400/40 blur-xl rounded-full animate-pulse" />
+                  {result.value === 'Cat' ? <Cat size={48} className="text-orange-400 relative" /> : <Bird size={48} className="text-blue-400 relative" />}
+                </>
+              ) : (
+                <Trophy size={32} className="text-yellow-600" />
+              )}
+            </div>
+            <div>
+              <h3 className="text-2xl font-black text-gray-900 uppercase tracking-tighter">
+                {result.rarity === 'legendary' ? '✨ LEGENDÄRER GEWINN! ✨' : 'GEWONNEN!'}
+              </h3>
             <div className="inline-block p-3 bg-yellow-100 rounded-full">
               <Trophy size={32} className="text-yellow-600" />
             </div>

@@ -78,6 +78,7 @@ import {
 import { cn } from './lib/utils';
 import { SlotMachine } from './components/SlotMachine';
 import { ProfilePage } from './components/ProfilePage';
+import { PetWidget } from './components/PetWidget';
 import { PRIZES } from './lib/prizes';
 
 // --- Components ---
@@ -284,6 +285,7 @@ export default function App() {
     const unsubscribe = onSnapshot(userDoc, async (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.data() as UserProfile;
+
         
         // One-time Inventory Reset
         if (!data.hasResetInventory) {
@@ -718,6 +720,14 @@ export default function App() {
   const activeGimmickIcon = useMemo(() => {
     if (!userProfile?.activeGimmick) return null;
     const gimmick = PRIZES.find(p => p.id === userProfile.activeGimmick);
+    const isLegendary = gimmick?.rarity === 'legendary';
+    const size = isLegendary ? 32 : 20;
+    const glowClass = isLegendary ? "drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]" : "";
+
+    switch (gimmick?.value) {
+      case 'Coffee': return <Coffee className={cn("text-amber-600 animate-bounce", glowClass)} size={size} />;
+      case 'Cat': return <Cat className={cn("text-orange-400 animate-pulse", glowClass)} size={size} />;
+      case 'Bird': return <Bird className={cn("text-blue-400 animate-bounce", glowClass)} size={size} />;
     switch (gimmick?.value) {
       case 'Coffee': return <Coffee className="text-amber-600 animate-bounce" size={20} />;
       case 'Cat': return <Cat className="text-orange-400 animate-pulse" size={20} />;
@@ -793,6 +803,8 @@ export default function App() {
               Admin-Bereich
             </Button>
             <div className="w-px h-6 bg-gray-200 mx-2" />
+            <Button
+              variant={view === 'slot' ? 'primary' : 'ghost'}
             <Button 
               variant={view === 'slot' ? 'primary' : 'ghost'} 
               onClick={() => setView('slot')}
@@ -801,6 +813,8 @@ export default function App() {
               <Ticket size={16} />
               Slot Maschine
             </Button>
+            <Button
+              variant={view === 'profile' ? 'primary' : 'ghost'}
             <Button 
               variant={view === 'profile' ? 'primary' : 'ghost'} 
               onClick={() => setView('profile')}
@@ -915,6 +929,7 @@ export default function App() {
       </header>
 
       <main className="flex-1 w-full max-w-[1920px] mx-auto p-4 md:p-6 lg:p-8">
+        {userProfile && <PetWidget userProfile={userProfile} />}
         <AnimatePresence mode="wait">
           {view === 'dashboard' ? (
             <motion.div
