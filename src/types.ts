@@ -29,6 +29,7 @@ export interface UserProfile {
   inventory?: string[];
   activeTheme?: string;
   activeGimmick?: string;
+  hasResetInventory?: boolean;
 }
 
 export type Rarity = 'common' | 'rare' | 'legendary';

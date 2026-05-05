@@ -285,6 +285,17 @@ export default function App() {
       if (snapshot.exists()) {
         const data = snapshot.data() as UserProfile;
 
+        // One-time Inventory Reset
+        if (!data.hasResetInventory) {
+          await updateDoc(userDoc, {
+            inventory: [],
+            activeTheme: '',
+            activeGimmick: '',
+            hasResetInventory: true
+          }).catch(err => handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}`));
+          // We don't set userProfile here yet, let the snapshot trigger again or continue
+        }
+
         // Token Reset Logic
         const today = new Date().toISOString().split('T')[0];
         if (data.lastTokenRefresh !== today) {
@@ -312,7 +323,8 @@ export default function App() {
           lastTokenRefresh: today,
           inventory: [],
           activeTheme: '',
-          activeGimmick: ''
+          activeGimmick: '',
+          hasResetInventory: true
         };
         setDoc(userDoc, newProfile).catch(err => handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}`));
         setUserProfile(newProfile);

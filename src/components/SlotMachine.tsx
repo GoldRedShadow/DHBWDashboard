@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Gift, Coins, AlertCircle, Sparkles, Trophy } from 'lucide-react';
+import { Gift, Coins, AlertCircle, Sparkles, Trophy, Ticket } from 'lucide-react';
 import { Prize, UserProfile } from '../types';
 import { PRIZES, getPrizesByRarity } from '../lib/prizes';
 import { db, doc, updateDoc, arrayUnion, increment } from '../firebase';
@@ -11,13 +11,14 @@ interface SlotMachineProps {
 }
 
 const RARITY_CHANCES = {
-  legendary: 0.05,
-  rare: 0.20,
-  common: 0.40
+  legendary: 0.01,
+  rare: 0.05,
+  common: 0.15
 };
 
 export const SlotMachine: React.FC<SlotMachineProps> = ({ userProfile }) => {
   const [isSpinning, setIsSpinning] = useState(false);
+  const [spinningReels, setSpinningReels] = useState([false, false, false]);
   const [result, setResult] = useState<Prize | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,11 +29,9 @@ export const SlotMachine: React.FC<SlotMachineProps> = ({ userProfile }) => {
     }
 
     setIsSpinning(true);
+    setSpinningReels([true, true, true]);
     setResult(null);
     setError(null);
-
-    // Simulate spin delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
 
     const rand = Math.random();
     let wonPrize: Prize | null = null;
@@ -48,25 +47,32 @@ export const SlotMachine: React.FC<SlotMachineProps> = ({ userProfile }) => {
       wonPrize = prizes[Math.floor(Math.random() * prizes.length)];
     }
 
-    try {
-      const userDoc = doc(db, 'users', userProfile.uid);
-      if (wonPrize) {
-        await updateDoc(userDoc, {
-          tokens: increment(-1),
-          inventory: arrayUnion(wonPrize.id)
-        });
-        setResult(wonPrize);
-      } else {
-        await updateDoc(userDoc, {
-          tokens: increment(-1)
-        });
+    // Staggered stop for the reels
+    setTimeout(() => setSpinningReels([false, true, true]), 1500);
+    setTimeout(() => setSpinningReels([false, false, true]), 2500);
+    setTimeout(async () => {
+      setSpinningReels([false, false, false]);
+
+      try {
+        const userDoc = doc(db, 'users', userProfile.uid);
+        if (wonPrize) {
+          await updateDoc(userDoc, {
+            tokens: increment(-1),
+            inventory: arrayUnion(wonPrize.id)
+          });
+          setResult(wonPrize);
+        } else {
+          await updateDoc(userDoc, {
+            tokens: increment(-1)
+          });
+        }
+      } catch (err) {
+        console.error('Update failed', err);
+        setError('Fehler beim Aktualisieren des Profils.');
+      } finally {
+        setIsSpinning(false);
       }
-    } catch (err) {
-      console.error('Update failed', err);
-      setError('Fehler beim Aktualisieren des Profils.');
-    } finally {
-      setIsSpinning(false);
-    }
+    }, 3500);
   };
 
   return (
@@ -96,20 +102,21 @@ export const SlotMachine: React.FC<SlotMachineProps> = ({ userProfile }) => {
 
           {/* Slot Display */}
           <div className="flex gap-4">
-            {[1, 2, 3].map((i) => (
+            {spinningReels.map((spinning, i) => (
               <div key={i} className="w-24 h-32 bg-gray-900 rounded-xl flex items-center justify-center border-b-4 border-black overflow-hidden relative">
                 <AnimatePresence mode="wait">
-                  {isSpinning ? (
+                  {spinning ? (
                     <motion.div
                       key="spinning"
                       initial={{ y: -100 }}
                       animate={{ y: 100 }}
-                      transition={{ repeat: Infinity, duration: 0.2, ease: "linear" }}
+                      transition={{ repeat: Infinity, duration: 0.15 + (i * 0.05), ease: "linear" }}
                       className="flex flex-col gap-4"
                     >
                       <Gift size={40} className="text-primary-400" />
                       <Sparkles size={40} className="text-yellow-400" />
                       <Trophy size={40} className="text-primary-400" />
+                      <Ticket size={40} className="text-blue-400" />
                     </motion.div>
                   ) : (
                     <motion.div
