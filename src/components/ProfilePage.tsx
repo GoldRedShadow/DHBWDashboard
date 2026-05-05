@@ -13,6 +13,7 @@ interface ProfilePageProps {
 export const ProfilePage: React.FC<ProfilePageProps> = ({ userProfile }) => {
   const inventory = userProfile.inventory || [];
 
+  
   // Get unique prizes from inventory
   const wonPrizes = PRIZES.filter(p => inventory.includes(p.id));
 
@@ -66,6 +67,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ userProfile }) => {
           </h3>
           <div className="space-y-3">
             <div
+            <div 
               onClick={deactivateTheme}
               className={cn(
                 "p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between",
@@ -80,6 +82,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ userProfile }) => {
             </div>
             {wonPrizes.filter(p => p.type === 'theme').map(prize => (
               <div
+              <div 
                 key={prize.id}
                 onClick={() => activatePrize(prize)}
                 className={cn(
@@ -119,6 +122,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ userProfile }) => {
           </h3>
           <div className="space-y-3">
             <div
+            <div 
               onClick={deactivateGimmick}
               className={cn(
                 "p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between",
@@ -133,6 +137,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ userProfile }) => {
             </div>
             {wonPrizes.filter(p => p.type === 'gimmick').map(prize => (
               <div
+              <div 
                 key={prize.id}
                 onClick={() => activatePrize(prize)}
                 className={cn(
@@ -167,3 +172,4 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ userProfile }) => {
     </div>
   );
 };
+

@@ -286,6 +286,7 @@ export default function App() {
       if (snapshot.exists()) {
         const data = snapshot.data() as UserProfile;
 
+        
         // One-time Inventory Reset
         if (!data.hasResetInventory) {
           await updateDoc(userDoc, {
@@ -727,6 +728,10 @@ export default function App() {
       case 'Coffee': return <Coffee className={cn("text-amber-600 animate-bounce", glowClass)} size={size} />;
       case 'Cat': return <Cat className={cn("text-orange-400 animate-pulse", glowClass)} size={size} />;
       case 'Bird': return <Bird className={cn("text-blue-400 animate-bounce", glowClass)} size={size} />;
+    switch (gimmick?.value) {
+      case 'Coffee': return <Coffee className="text-amber-600 animate-bounce" size={20} />;
+      case 'Cat': return <Cat className="text-orange-400 animate-pulse" size={20} />;
+      case 'Bird': return <Bird className="text-blue-400 animate-bounce" size={20} />;
       default: return null;
     }
   }, [userProfile]);
@@ -800,6 +805,8 @@ export default function App() {
             <div className="w-px h-6 bg-gray-200 mx-2" />
             <Button
               variant={view === 'slot' ? 'primary' : 'ghost'}
+            <Button 
+              variant={view === 'slot' ? 'primary' : 'ghost'} 
               onClick={() => setView('slot')}
               className="px-3 py-1.5 text-sm text-yellow-600 font-bold"
             >
@@ -808,6 +815,8 @@ export default function App() {
             </Button>
             <Button
               variant={view === 'profile' ? 'primary' : 'ghost'}
+            <Button 
+              variant={view === 'profile' ? 'primary' : 'ghost'} 
               onClick={() => setView('profile')}
               className="px-3 py-1.5 text-sm"
             >
