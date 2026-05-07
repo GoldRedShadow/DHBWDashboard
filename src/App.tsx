@@ -221,6 +221,77 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
   // We don't throw here to avoid crashing the whole app, but we log it clearly.
 }
 
+// --- Header Pet Component ---
+
+const HeaderPet = ({ gimmick, glowClass, size }: { gimmick: any, glowClass: string, size: number }) => {
+  const [messageIndex, setMessageIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  
+  const petMessages = {
+    Cat: [
+      "Miau! Bereit für die nächste Vorlesung?",
+      "Schnurr... Du machst das heute wirklich super!",
+      "Lust auf eine kleine Lernpause mit mir?"
+    ],
+    Bird: [
+      "Huhu! Ich habe alle deine Deadlines im Blick!",
+      "Wissen ist Macht! Lass uns gemeinsam hoch hinaus fliegen!",
+      "Gute Arbeit! Deine Disziplin ist wirklich beeindruckend."
+    ],
+    Coffee: [
+      "Noch ein Schluck und die Welt sieht viel produktiver aus!",
+      "Koffein-Level: Fast optimal! Weiter geht's!",
+      "Der Duft des Erfolgs... oder ist das frisch gerösteter Arabica?"
+    ]
+  }[gimmick.value as 'Cat' | 'Bird' | 'Coffee'] || ["Hallo!"];
+
+  const handleHover = () => {
+    setMessageIndex((prev) => (prev + 1) % petMessages.length);
+    setIsHovered(true);
+  };
+
+  return (
+    <div 
+      className="relative group flex items-center h-full" 
+      onMouseEnter={handleHover}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Speech Bubble */}
+      <AnimatePresence>
+        {isHovered && (
+          <motion.div
+            initial={{ opacity: 0, y: 5, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 5, scale: 0.95 }}
+            className="absolute -top-12 left-1/2 -translate-x-1/2 bg-white px-3 py-1.5 rounded-xl shadow-xl text-[10px] font-bold text-gray-700 whitespace-nowrap border border-gray-100 z-50 pointer-events-none"
+          >
+            {petMessages[messageIndex]}
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white border-r border-b border-gray-100 rotate-45" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Pet Icon */}
+      {gimmick.value === 'Cat' ? (
+        <Cat 
+          className={cn("text-orange-400 animate-pulse cursor-pointer transition-transform group-hover:scale-110", glowClass, "rotate-[-12deg] skew-x-[-8deg] scale-x-110")} 
+          size={size} 
+        />
+      ) : gimmick.value === 'Bird' ? (
+        <Bird 
+          className={cn("text-blue-400 animate-bounce cursor-pointer transition-transform group-hover:scale-110", glowClass)} 
+          size={size} 
+        />
+      ) : (
+        <Coffee 
+          className={cn("text-amber-600 animate-bounce cursor-pointer transition-transform group-hover:scale-110", glowClass)} 
+          size={size} 
+        />
+      )}
+    </div>
+  );
+};
+
 // --- Main App ---
 
 export default function App() {
@@ -724,16 +795,7 @@ export default function App() {
     const size = isLegendary ? 32 : 20;
     const glowClass = isLegendary ? "drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]" : "";
 
-    switch (gimmick?.value) {
-      case 'Coffee': return <Coffee className={cn("text-amber-600 animate-bounce", glowClass)} size={size} />;
-      case 'Cat': return <Cat className={cn("text-orange-400 animate-pulse", glowClass)} size={size} />;
-      case 'Bird': return <Bird className={cn("text-blue-400 animate-bounce", glowClass)} size={size} />;
-    switch (gimmick?.value) {
-      case 'Coffee': return <Coffee className="text-amber-600 animate-bounce" size={20} />;
-      case 'Cat': return <Cat className="text-orange-400 animate-pulse" size={20} />;
-      case 'Bird': return <Bird className="text-blue-400 animate-bounce" size={20} />;
-      default: return null;
-    }
+    return <HeaderPet gimmick={gimmick} glowClass={glowClass} size={size} />;
   }, [userProfile]);
 
   if (loading) {
@@ -803,8 +865,6 @@ export default function App() {
               Admin-Bereich
             </Button>
             <div className="w-px h-6 bg-gray-200 mx-2" />
-            <Button
-              variant={view === 'slot' ? 'primary' : 'ghost'}
             <Button 
               variant={view === 'slot' ? 'primary' : 'ghost'} 
               onClick={() => setView('slot')}
@@ -813,8 +873,6 @@ export default function App() {
               <Ticket size={16} />
               Slot Maschine
             </Button>
-            <Button
-              variant={view === 'profile' ? 'primary' : 'ghost'}
             <Button 
               variant={view === 'profile' ? 'primary' : 'ghost'} 
               onClick={() => setView('profile')}
@@ -825,12 +883,13 @@ export default function App() {
             </Button>
           </nav>
 
+
+
           <div className="flex items-center gap-4">
             {user ? (
               <>
                 <div className="hidden sm:flex flex-col items-end">
-                  <div className="flex items-center gap-2">
-                    {activeGimmickIcon}
+                  <div className="flex items-center gap-3">
                     <span className="text-sm font-medium text-gray-900">{user.displayName}</span>
                   </div>
                   <span className="text-xs text-gray-500 capitalize">{userProfile?.role}</span>
@@ -1853,7 +1912,7 @@ export default function App() {
                               </div>
                               <div className="flex items-center gap-2">
                                 <Clock size={18} className="text-white" />
-                                <span className="font-medium">{moduleGroups.find(m => m.name === selectedModule)?.lessons.length} Lektionen Gesamt</span>
+                                <span className="font-medium">{moduleGroups.find(m => m.name === selectedModule)?.lessons?.length} Lektionen Gesamt</span>
                               </div>
                             </div>
                           </div>
@@ -1869,14 +1928,14 @@ export default function App() {
                       {/* Modal Content */}
                       <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-8 scrollbar-hide">
                         {/* Events / Deadlines Section */}
-                        {moduleGroups.find(m => m.name === selectedModule)?.events.length! > 0 && (
+                        {(moduleGroups.find(m => m.name === selectedModule)?.events?.length || 0) > 0 && (
                           <section className="space-y-4">
                             <div className="flex items-center gap-2 pb-2 border-b-2 border-red-100">
                               <AlertCircle size={20} className="text-red-500" />
                               <h4 className="font-bold text-gray-900">Anstehende Prüfungsleistungen</h4>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              {moduleGroups.find(m => m.name === selectedModule)?.events.map(event => (
+                              {moduleGroups.find(m => m.name === selectedModule)?.events?.map(event => (
                                 <Card key={event.id} className="p-4 border-l-4 border-red-500 bg-red-50/30">
                                   <div className="flex justify-between items-start mb-2">
                                     <span className={cn(
@@ -1904,8 +1963,7 @@ export default function App() {
                             <h4 className="font-bold text-gray-900">Alle Vorlesungstermine</h4>
                           </div>
                           <div className="space-y-3">
-                            {moduleGroups.find(m => m.name === selectedModule)?.lessons
-                              .sort((a, b) => {
+                            {moduleGroups.find(m => m.name === selectedModule)?.lessons?.sort((a, b) => {
                                 // Sort by day and then by start time
                                 const daysOrder: Record<string, number> = { 'Montag': 1, 'Dienstag': 2, 'Mittwoch': 3, 'Donnerstag': 4, 'Freitag': 5, 'Samstag': 6, 'Sonntag': 7 };
                                 if (a.date && b.date) return a.date.localeCompare(b.date);
