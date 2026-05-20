@@ -44,12 +44,44 @@ export const PRIZES: Prize[] = [
     value: 'theme-retro'
   },
   {
+    id: 'theme-hell',
+    name: 'Hölle',
+    type: 'theme',
+    rarity: 'rare',
+    description: 'Heiß, feurig und verdammt produktiv.',
+    value: 'theme-hell'
+  },
+  {
+    id: 'theme-heaven',
+    name: 'Himmel',
+    type: 'theme',
+    rarity: 'rare',
+    description: 'Himmlische Ruhe für fokussiertes Lernen.',
+    value: 'theme-heaven'
+  },
+  {
+    id: 'theme-space',
+    name: 'Weltraum',
+    type: 'theme',
+    rarity: 'rare',
+    description: 'Unendliche Weiten für deine Gedanken.',
+    value: 'theme-space'
+  },
+  {
     id: 'gimmick-coffee',
     name: 'Coffee Addict',
     type: 'gimmick',
     rarity: 'rare',
     description: 'A coffee mug icon next to your name to show your dedication.',
     value: 'Coffee'
+  },
+  {
+    id: 'gimmick-sun',
+    name: 'Sonnen Pet',
+    type: 'gimmick',
+    rarity: 'rare',
+    description: 'Ein strahlender Begleiter für sonnige Gemüter.',
+    value: 'Sun'
   },
   // Legendary Gimmicks (Pets)
   {
@@ -67,6 +99,22 @@ export const PRIZES: Prize[] = [
     rarity: 'legendary',
     description: 'A wise owl that watches over your progress.',
     value: 'Bird'
+  },
+  {
+    id: 'gimmick-dog',
+    name: 'Bester Freund',
+    type: 'gimmick',
+    rarity: 'legendary',
+    description: 'Ein treuer Hund, der dich beim Lernen anfeuert.',
+    value: 'Dog'
+  },
+  {
+    id: 'gimmick-demon',
+    name: 'Dämonen Pet',
+    type: 'gimmick',
+    rarity: 'legendary',
+    description: 'Ein kleiner Dämon, der deine Prokrastination fressen will.',
+    value: 'Flame'
   }
 ];
 

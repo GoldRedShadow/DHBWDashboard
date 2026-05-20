@@ -1,19 +1,34 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Gift, Coins, AlertCircle, Sparkles, Trophy, Ticket, Cat, Bird } from 'lucide-react';
+import { Gift, Coins, AlertCircle, Sparkles, Trophy, Ticket, Cat, Bird, Dog, Flame, Sun, Coffee, Palette } from 'lucide-react';
 import { Prize, UserProfile } from '../types';
 import { PRIZES, getPrizesByRarity } from '../lib/prizes';
 import { db, doc, updateDoc, arrayUnion, increment } from '../firebase';
 import { cn } from '../lib/utils';
+import { PET_CONFIG } from './PetWidget';
 
 interface SlotMachineProps {
   userProfile: UserProfile;
 }
 
 const RARITY_CHANCES = {
-  legendary: 0.01,
-  rare: 0.05,
-  common: 0.15
+  legendary: 0.05,
+  rare: 0.10,
+  common: 0.20
+};
+
+const PrizeIcon = ({ prize, size = 48, className = "" }: { prize: Prize, size?: number, className?: string }) => {
+  if (prize.type === 'theme') {
+    return <Palette size={size} className={cn("text-purple-400", className)} />;
+  }
+
+  const config = PET_CONFIG[prize.value as keyof typeof PET_CONFIG];
+  if (config) {
+    const Icon = config.icon;
+    return <Icon size={size} className={cn(config.color, className)} />;
+  }
+
+  return <Gift size={size} className={cn("text-primary-400", className)} />;
 };
 
 export const SlotMachine: React.FC<SlotMachineProps> = ({ userProfile }) => {
@@ -36,15 +51,28 @@ export const SlotMachine: React.FC<SlotMachineProps> = ({ userProfile }) => {
     const rand = Math.random();
     let wonPrize: Prize | null = null;
 
+    const availablePrizes = (rarity: 'legendary' | 'rare' | 'common') => {
+      const prizes = getPrizesByRarity(rarity);
+      return prizes.filter(p => !userProfile.inventory?.includes(p.id));
+    };
+
     if (rand < RARITY_CHANCES.legendary) {
-      const prizes = getPrizesByRarity('legendary');
-      wonPrize = prizes[Math.floor(Math.random() * prizes.length)];
+      const prizes = availablePrizes('legendary');
+      if (prizes.length > 0) wonPrize = prizes[Math.floor(Math.random() * prizes.length)];
+      else {
+        const fallback = availablePrizes('rare');
+        if (fallback.length > 0) wonPrize = fallback[Math.floor(Math.random() * fallback.length)];
+      }
     } else if (rand < RARITY_CHANCES.legendary + RARITY_CHANCES.rare) {
-      const prizes = getPrizesByRarity('rare');
-      wonPrize = prizes[Math.floor(Math.random() * prizes.length)];
+      const prizes = availablePrizes('rare');
+      if (prizes.length > 0) wonPrize = prizes[Math.floor(Math.random() * prizes.length)];
+      else {
+        const fallback = availablePrizes('common');
+        if (fallback.length > 0) wonPrize = fallback[Math.floor(Math.random() * fallback.length)];
+      }
     } else if (rand < RARITY_CHANCES.legendary + RARITY_CHANCES.rare + RARITY_CHANCES.common) {
-      const prizes = getPrizesByRarity('common');
-      wonPrize = prizes[Math.floor(Math.random() * prizes.length)];
+      const prizes = availablePrizes('common');
+      if (prizes.length > 0) wonPrize = prizes[Math.floor(Math.random() * prizes.length)];
     }
 
     // Staggered stop for the reels
@@ -127,15 +155,12 @@ export const SlotMachine: React.FC<SlotMachineProps> = ({ userProfile }) => {
                       className="text-white"
                     >
                       {result ? (
-                        result.rarity === 'legendary' ? (
-                          <div className="relative">
+                        <div className="relative">
+                          {result.rarity === 'legendary' && (
                             <div className="absolute inset-0 bg-yellow-400/30 blur-lg rounded-full animate-pulse" />
-                            {result.value === 'Cat' ? <Cat size={48} className="text-orange-400 relative" /> : <Bird size={48} className="text-blue-400 relative" />}
-                          </div>
-                        ) : result.rarity === 'rare' ? <Sparkles size={48} className="text-blue-400" /> :
-                        result.rarity === 'legendary' ? <Trophy size={48} className="text-yellow-400" /> :
-                        result.rarity === 'rare' ? <Sparkles size={48} className="text-blue-400" /> :
-                        <Gift size={48} className="text-primary-400" />
+                          )}
+                          <PrizeIcon prize={result} className="relative" />
+                        </div>
                       ) : (
                         <Gift size={48} className="text-gray-700" />
                       )}
@@ -173,26 +198,41 @@ export const SlotMachine: React.FC<SlotMachineProps> = ({ userProfile }) => {
       <AnimatePresence>
         {!isSpinning && result && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-yellow-50 border-2 border-yellow-200 p-6 rounded-2xl text-center space-y-4"
+            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            className="bg-white border-4 border-yellow-400 p-8 rounded-[2rem] text-center space-y-4 shadow-2xl relative overflow-hidden"
           >
-            <div className="inline-block p-3 bg-yellow-100 rounded-full relative">
-              {result.rarity === 'legendary' ? (
-                <>
-                  <div className="absolute inset-0 bg-yellow-400/40 blur-xl rounded-full animate-pulse" />
-                  {result.value === 'Cat' ? <Cat size={48} className="text-orange-400 relative" /> : <Bird size={48} className="text-blue-400 relative" />}
-                </>
-              ) : (
-                <Trophy size={32} className="text-yellow-600" />
+            <div className="absolute inset-0 bg-gradient-to-b from-yellow-400/10 to-transparent pointer-events-none" />
+
+            <div className="inline-block p-6 bg-yellow-100 rounded-3xl relative mb-2">
+              {result.rarity === 'legendary' && (
+                <div className="absolute inset-0 bg-yellow-400/40 blur-2xl rounded-full animate-pulse" />
               )}
+              <PrizeIcon prize={result} size={64} className="relative" />
             </div>
+
             <div>
-              <h3 className="text-2xl font-black text-gray-900 uppercase tracking-tighter">
-                {result.rarity === 'legendary' ? '✨ LEGENDÄRER GEWINN! ✨' : 'GEWONNEN!'}
-              </h3>
-              <p className="text-gray-600">Du hast <span className="font-bold text-primary-600">{result.name}</span> erhalten!</p>
-              <p className="text-xs text-gray-400 mt-1 uppercase tracking-widest font-bold">Seltenheit: {result.rarity}</p>
+              <motion.h3
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ repeat: Infinity, duration: 2 }}
+                className="text-3xl font-black text-gray-900 uppercase tracking-tighter"
+              >
+                {result.rarity === 'legendary' ? '✨ LEGENDÄRER GEWINN! ✨' :
+                 result.rarity === 'rare' ? '🔥 SELTENER FUND! 🔥' : 'GEWONNEN!'}
+              </motion.h3>
+              <p className="text-xl text-gray-600 mt-2">
+                Du hast <span className="font-extrabold text-primary-600 underline decoration-yellow-400 underline-offset-4">{result.name}</span> erhalten!
+              </p>
+              <div className="flex items-center justify-center gap-2 mt-4">
+                <span className={cn(
+                  "px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest border-2",
+                  result.rarity === 'legendary' ? "bg-yellow-400 text-yellow-950 border-yellow-500" :
+                  result.rarity === 'rare' ? "bg-blue-500 text-white border-blue-600" :
+                  "bg-gray-200 text-gray-700 border-gray-300"
+                )}>
+                  {result.rarity}
+                </span>
+              </div>
             </div>
           </motion.div>
         )}
