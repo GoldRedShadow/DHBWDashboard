@@ -46,3 +46,26 @@
 .theme-retro .text-gray-900, .theme-retro h1, .theme-retro h2, .theme-retro h3, .theme-retro h4 { color: #010101 !important; }
 .theme-retro .text-primary-600 { color: #b967ff !important; }
 .theme-retro .bg-primary-600 { background-color: #ff71ce !important; }
+
+.theme-hell { background-color: #1a0505; color: #ff4d4d; }
+.theme-hell .bg-white, .theme-hell header, .theme-hell footer { background-color: #2d0a0a !important; border-color: #ff0000 !important; }
+.theme-hell .text-gray-900, .theme-hell h1, .theme-hell h2, .theme-hell h3, .theme-hell h4 { color: #ff4d4d !important; text-shadow: 0 0 8px #ff0000; }
+.theme-hell .text-primary-600 { color: #ff8000 !important; }
+.theme-hell .bg-primary-600 { background-color: #cc0000 !important; }
+.theme-hell .bg-gray-50, .theme-hell .bg-gray-100 { background-color: #1a0505 !important; }
+.theme-hell .border-gray-100, .theme-hell .border-gray-200 { border-color: #4d0000 !important; }
+
+.theme-heaven { background-color: #f0f9ff; color: #0369a1; }
+.theme-heaven .bg-white, .theme-heaven header, .theme-heaven footer { background-color: #ffffff !important; border-color: #bae6fd !important; box-shadow: 0 0 15px rgba(186, 230, 253, 0.5) !important; }
+.theme-heaven .text-gray-900, .theme-heaven h1, .theme-heaven h2, .theme-heaven h3, .theme-heaven h4 { color: #0c4a6e !important; }
+.theme-heaven .text-primary-600 { color: #0ea5e9 !important; }
+.theme-heaven .bg-primary-600 { background-color: #0284c7 !important; }
+.theme-heaven .bg-gray-50, .theme-heaven .bg-gray-100 { background-color: #f0f9ff !important; }
+
+.theme-space { background-color: #020617; color: #e2e8f0; }
+.theme-space .bg-white, .theme-space header, .theme-space footer { background-color: #0f172a !important; border-color: #1e293b !important; border-width: 1px !important; }
+.theme-space .text-gray-900, .theme-space h1, .theme-space h2, .theme-space h3, .theme-space h4 { color: #f8fafc !important; text-shadow: 0 0 2px #fff; }
+.theme-space .text-primary-600 { color: #818cf8 !important; }
+.theme-space .bg-primary-600 { background-color: #4f46e5 !important; }
+.theme-space .bg-gray-50, .theme-space .bg-gray-100 { background-color: #020617 !important; }
+.theme-space .border-gray-100, .theme-space .border-gray-200 { border-color: #1e293b !important; }

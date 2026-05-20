@@ -78,7 +78,7 @@ import {
 import { cn } from './lib/utils';
 import { SlotMachine } from './components/SlotMachine';
 import { ProfilePage } from './components/ProfilePage';
-import { PetWidget } from './components/PetWidget';
+import { PetWidget, PET_CONFIG } from './components/PetWidget';
 import { PRIZES } from './lib/prizes';
 
 // --- Components ---
@@ -227,26 +227,16 @@ const HeaderPet = ({ gimmick, glowClass, size }: { gimmick: any, glowClass: stri
   const [messageIndex, setMessageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   
-  const petMessages = {
-    Cat: [
-      "Miau! Bereit für die nächste Vorlesung?",
-      "Schnurr... Du machst das heute wirklich super!",
-      "Lust auf eine kleine Lernpause mit mir?"
-    ],
-    Bird: [
-      "Huhu! Ich habe alle deine Deadlines im Blick!",
-      "Wissen ist Macht! Lass uns gemeinsam hoch hinaus fliegen!",
-      "Gute Arbeit! Deine Disziplin ist wirklich beeindruckend."
-    ],
-    Coffee: [
-      "Noch ein Schluck und die Welt sieht viel produktiver aus!",
-      "Koffein-Level: Fast optimal! Weiter geht's!",
-      "Der Duft des Erfolgs... oder ist das frisch gerösteter Arabica?"
-    ]
-  }[gimmick.value as 'Cat' | 'Bird' | 'Coffee'] || ["Hallo!"];
+  const config = PET_CONFIG[gimmick.value as keyof typeof PET_CONFIG] || {
+    icon: Sparkles,
+    color: "text-yellow-500",
+    messages: ["Hallo!"]
+  };
+
+  const Icon = config.icon;
 
   const handleHover = () => {
-    setMessageIndex((prev) => (prev + 1) % petMessages.length);
+    setMessageIndex((prev) => (prev + 1) % config.messages.length);
     setIsHovered(true);
   };
 
@@ -265,29 +255,23 @@ const HeaderPet = ({ gimmick, glowClass, size }: { gimmick: any, glowClass: stri
             exit={{ opacity: 0, y: 5, scale: 0.95 }}
             className="absolute -top-12 left-1/2 -translate-x-1/2 bg-white px-3 py-1.5 rounded-xl shadow-xl text-[10px] font-bold text-gray-700 whitespace-nowrap border border-gray-100 z-50 pointer-events-none"
           >
-            {petMessages[messageIndex]}
+            {config.messages[messageIndex]}
             <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white border-r border-b border-gray-100 rotate-45" />
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Pet Icon */}
-      {gimmick.value === 'Cat' ? (
-        <Cat 
-          className={cn("text-orange-400 animate-pulse cursor-pointer transition-transform group-hover:scale-110", glowClass, "rotate-[-12deg] skew-x-[-8deg] scale-x-110")} 
-          size={size} 
-        />
-      ) : gimmick.value === 'Bird' ? (
-        <Bird 
-          className={cn("text-blue-400 animate-bounce cursor-pointer transition-transform group-hover:scale-110", glowClass)} 
-          size={size} 
-        />
-      ) : (
-        <Coffee 
-          className={cn("text-amber-600 animate-bounce cursor-pointer transition-transform group-hover:scale-110", glowClass)} 
-          size={size} 
-        />
-      )}
+      <Icon
+        className={cn(
+          config.color,
+          "cursor-pointer transition-transform group-hover:scale-110",
+          glowClass,
+          gimmick.value === 'Cat' && "rotate-[-12deg] skew-x-[-8deg] scale-x-110",
+          gimmick.value === 'Bird' || gimmick.value === 'Coffee' || gimmick.value === 'Dog' ? "animate-bounce" : "animate-pulse"
+        )}
+        size={size}
+      />
     </div>
   );
 };
@@ -374,11 +358,11 @@ export default function App() {
         if (data.lastTokenRefresh !== today) {
           const updatedProfile = {
             ...data,
-            tokens: 5,
+            tokens: 6,
             lastTokenRefresh: today
           };
           await updateDoc(userDoc, {
-            tokens: 5,
+            tokens: 6,
             lastTokenRefresh: today
           }).catch(err => handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}`));
           setUserProfile(updatedProfile);
@@ -392,7 +376,7 @@ export default function App() {
           uid: user.uid,
           email: user.email || '',
           role: user.email === 'lukas.spraul@gmail.com' ? 'admin' : 'student',
-          tokens: 5,
+          tokens: 6,
           lastTokenRefresh: today,
           inventory: [],
           activeTheme: '',
