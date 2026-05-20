@@ -73,7 +73,8 @@ import {
   Coffee,
   Cat,
   Bird,
-  Ticket
+  Ticket,
+  Sparkles,
 } from 'lucide-react';
 import { cn } from './lib/utils';
 import { SlotMachine } from './components/SlotMachine';
