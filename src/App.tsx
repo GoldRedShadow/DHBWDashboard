@@ -973,7 +973,7 @@ export default function App() {
       </header>
 
       <main className="flex-1 w-full max-w-[1920px] mx-auto p-4 md:p-6 lg:p-8">
-        {userProfile && <PetWidget userProfile={userProfile} />}
+        {userProfile && <PetWidget userProfile={userProfile} classes={classes} events={events} />}
         <AnimatePresence mode="wait">
           {view === 'dashboard' ? (
             <motion.div

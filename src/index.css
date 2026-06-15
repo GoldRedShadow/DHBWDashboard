@@ -14,6 +14,18 @@
   --color-primary-950: #450a0a;
 }
 
+/* --- ANIMATIONS --- */
+@keyframes aurora {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes stars {
+  from { background-position: 0 0; }
+  to { background-position: -10000px 5000px; }
+}
+
 /* Custom Themes */
 .theme-dark { background-color: #111827; color: #f9fafb; }
 .theme-dark .bg-white, .theme-dark header, .theme-dark footer { background-color: #1f2937 !important; border-color: #374151 !important; }
@@ -34,6 +46,104 @@
 .theme-forest .bg-primary-600 { background-color: #2d5a27 !important; }
 .theme-forest .text-gray-900, .theme-forest h1, .theme-forest h2, .theme-forest h3, .theme-forest h4 { color: #1a2e1a !important; }
 
+/* NEW COMMON THEMES */
+.theme-midnight-ocean { background-color: #0f172a; color: #e2e8f0; }
+.theme-midnight-ocean .bg-white, .theme-midnight-ocean header, .theme-midnight-ocean footer { background-color: #1e293b !important; border-color: #334155 !important; }
+.theme-midnight-ocean .text-gray-900, .theme-midnight-ocean h1, .theme-midnight-ocean h2, .theme-midnight-ocean h3, .theme-midnight-ocean h4 { color: #f8fafc !important; }
+.theme-midnight-ocean .text-gray-500, .theme-midnight-ocean .text-gray-400 { color: #94a3b8 !important; }
+.theme-midnight-ocean .text-primary-600 { color: #38bdf8 !important; }
+.theme-midnight-ocean .bg-primary-600 { background-color: #0284c7 !important; }
+
+.theme-forest-green { background-color: #f0fdf4; color: #14532d; }
+.theme-forest-green .bg-white, .theme-forest-green header, .theme-forest-green footer { background-color: #ffffff !important; border-color: #bbf7d0 !important; }
+.theme-forest-green .text-primary-600 { color: #16a34a !important; }
+.theme-forest-green .bg-primary-600 { background-color: #166534 !important; }
+
+.theme-sunset-amber { background-color: #fffbeb; color: #78350f; }
+.theme-sunset-amber .bg-white, .theme-sunset-amber header, .theme-sunset-amber footer { background-color: #ffffff !important; border-color: #fde68a !important; }
+.theme-sunset-amber .text-primary-600 { color: #d97706 !important; }
+.theme-sunset-amber .bg-primary-600 { background-color: #b45309 !important; }
+
+/* NEW RARE THEMES */
+.theme-synthwave { background-color: #2e1065; color: #f472b6; }
+.theme-synthwave .bg-white, .theme-synthwave header, .theme-synthwave footer { background-color: #4c1d95 !important; border-color: #ff00ff !important; border-width: 2px !important; box-shadow: 0 0 10px #ff00ff !important; }
+.theme-synthwave .text-gray-900, .theme-synthwave h1, .theme-synthwave h2, .theme-synthwave h3, .theme-synthwave h4 { color: #00ffff !important; text-shadow: 0 0 5px #00ffff; }
+.theme-synthwave .text-gray-500, .theme-synthwave .text-gray-400 { color: #f472b6 !important; }
+.theme-synthwave .text-primary-600 { color: #ff00ff !important; }
+.theme-synthwave .bg-primary-600 { background-color: #db2777 !important; }
+
+.theme-monochrom { background-color: #f3f4f6; color: #1f2937; filter: grayscale(100%); }
+.theme-monochrom .bg-white, .theme-monochrom header, .theme-monochrom footer { background-color: #ffffff !important; border-color: #d1d5db !important; }
+.theme-monochrom .text-primary-600 { color: #374151 !important; }
+.theme-monochrom .bg-primary-600 { background-color: #1f2937 !important; }
+
+.theme-cybernetic { background-color: #000000; color: #00ff41; }
+.theme-cybernetic .bg-white, .theme-cybernetic header, .theme-cybernetic footer { background-color: #0a0a0a !important; border-color: #00ff41 !important; border-width: 1px !important; }
+.theme-cybernetic .text-gray-900, .theme-cybernetic h1, .theme-cybernetic h2, .theme-cybernetic h3, .theme-cybernetic h4 { color: #00ff41 !important; text-shadow: 0 0 8px #00ff41; font-family: monospace; }
+.theme-cybernetic .text-gray-500, .theme-cybernetic .text-gray-400 { color: #008f11 !important; }
+.theme-cybernetic .text-primary-600 { color: #008f11 !important; }
+.theme-cybernetic .bg-primary-600 { background-color: #00ff41 !important; color: black !important; }
+
+.theme-sakura { background-color: #fdf2f8; color: #be185d; }
+.theme-sakura .bg-white, .theme-sakura header, .theme-sakura footer { background-color: #ffffff !important; border-color: #fbcfe8 !important; }
+.theme-sakura .text-primary-600 { color: #db2777 !important; }
+.theme-sakura .bg-primary-600 { background-color: #be185d !important; }
+
+.theme-void { background-color: #000000; color: #ffffff; }
+.theme-void .bg-white, .theme-void header, .theme-void footer { background-color: #000000 !important; border-color: #ffffff !important; border-width: 1px !important; }
+.theme-void .text-gray-900, .theme-void h1, .theme-void h2, .theme-void h3, .theme-void h4 { color: #ffffff !important; }
+.theme-void .text-primary-600 { color: #cccccc !important; }
+.theme-void .bg-primary-600 { background-color: #ffffff !important; color: black !important; }
+.theme-void .bg-gray-50, .theme-void .bg-gray-100 { background-color: #0a0a0a !important; }
+
+/* NEW LEGENDARY THEMES */
+.theme-aurora {
+  background: linear-gradient(270deg, #0f172a, #1e1b4b, #312e81, #1e1b4b, #0f172a);
+  background-size: 400% 400%;
+  animation: aurora 15s ease infinite;
+  color: #a7f3d0;
+}
+.theme-aurora .bg-white, .theme-aurora header, .theme-aurora footer {
+  background-color: rgba(15, 23, 42, 0.8) !important;
+  backdrop-filter: blur(8px);
+  border-color: #10b981 !important;
+  border-width: 2px !important;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.3) !important;
+}
+.theme-aurora .text-gray-900, .theme-aurora h1, .theme-aurora h2, .theme-aurora h3, .theme-aurora h4 { color: #10b981 !important; text-shadow: 0 0 10px #10b981; }
+.theme-aurora .text-gray-500, .theme-aurora .text-gray-400 { color: #34d399 !important; }
+.theme-aurora .text-primary-600 { color: #8b5cf6 !important; }
+.theme-aurora .bg-primary-600 { background-color: #10b981 !important; }
+
+.theme-cosmic-void {
+  background: #000000 url('https://www.transparenttextures.com/patterns/stardust.png');
+  animation: stars 200s linear infinite;
+  color: #e2e8f0;
+}
+.theme-cosmic-void .bg-white, .theme-cosmic-void header, .theme-cosmic-void footer {
+  background-color: rgba(0, 0, 0, 0.9) !important;
+  border-color: #312e81 !important;
+  border-width: 1px !important;
+  box-shadow: 0 0 20px rgba(79, 70, 229, 0.2) !important;
+}
+.theme-cosmic-void .text-gray-900, .theme-cosmic-void h1, .theme-cosmic-void h2, .theme-cosmic-void h3, .theme-cosmic-void h4 { color: #f8fafc !important; text-shadow: 0 0 2px #fff; }
+.theme-cosmic-void .text-gray-500, .theme-cosmic-void .text-gray-400 { color: #94a3b8 !important; }
+.theme-cosmic-void .text-primary-600 { color: #6366f1 !important; }
+.theme-cosmic-void .bg-primary-600 { background-color: #4f46e5 !important; }
+
+.theme-dragon-gold { background-color: #2e1065; color: #fbbf24; }
+.theme-dragon-gold .bg-white, .theme-dragon-gold header, .theme-dragon-gold footer {
+  background-color: #4c1d95 !important;
+  border-color: #fbbf24 !important;
+  border-width: 3px !important;
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.4) !important;
+}
+.theme-dragon-gold .text-gray-900, .theme-dragon-gold h1, .theme-dragon-gold h2, .theme-dragon-gold h3, .theme-dragon-gold h4 { color: #fbbf24 !important; text-shadow: 2px 2px 0px #78350f; }
+.theme-dragon-gold .text-gray-500, .theme-dragon-gold .text-gray-400 { color: #d97706 !important; }
+.theme-dragon-gold .text-primary-600 { color: #fbbf24 !important; }
+.theme-dragon-gold .bg-primary-600 { background-color: #fbbf24 !important; color: #4c1d95 !important; font-weight: 900 !important; }
+
+/* LEGACY THEMES */
 .theme-cyberpunk { background-color: #0d0221; color: #00ff41; }
 .theme-cyberpunk .bg-white, .theme-cyberpunk header, .theme-cyberpunk footer { background-color: #1a0b2e !important; border-color: #ff00ff !important; border-width: 2px !important; }
 .theme-cyberpunk .text-gray-900, .theme-cyberpunk h1, .theme-cyberpunk h2, .theme-cyberpunk h3, .theme-cyberpunk h4 { color: #00ff41 !important; text-shadow: 0 0 5px #00ff41; }
