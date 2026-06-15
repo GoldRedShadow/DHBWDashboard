@@ -12,8 +12,8 @@ interface SlotMachineProps {
 }
 
 const RARITY_CHANCES = {
-  legendary: 0.05,
-  rare: 0.10,
+  legendary: 0.1,
+  rare: 0.15,
   common: 0.20
 };
 
